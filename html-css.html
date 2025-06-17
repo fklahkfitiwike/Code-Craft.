@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML & CSS Fundamentals | Code Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000;
+            --text: #fff;
+            --accent: rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s ease;
+            --highlight: rgba(255, 255, 255, 0.05);
+            --primary: #fff;
+            --html-color: #e34f26;
+            --css-color: #2965f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+            opacity: 0.5;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, 50px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        /* Navigation Header */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo a {
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            background: linear-gradient(90deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 3s infinite alternate;
+            letter-spacing: -1px;
+        }
+        
+        @keyframes shine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: var(--text);
+            font-size: 1.3rem;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+        
+        nav ul li a:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        
+        /* Course Hero */
+        .course-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin: 3rem 0 5rem;
+        }
+        
+        .course-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .html-badge {
+            background: var(--html-color);
+            color: white;
+        }
+        
+        .css-badge {
+            background: var(--css-color);
+            color: white;
+            margin-left: 0.5rem;
+        }
+        
+        .course-title {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .course-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .course-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .enroll-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            margin-right: 1rem;
+        }
+        
+        .enroll-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+        
+        .preview-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+        
+        .preview-btn:hover {
+            background: var(--highlight);
+            transform: translateY(-3px);
+        }
+        
+        .course-image {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 350px;
+            background: linear-gradient(45deg, var(--html-color), var(--css-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .course-icon {
+            font-size: 10rem;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        /* Course Content */
+        .course-content {
+            margin: 5rem 0;
+        }
+        
+        .content-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .content-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .content-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+        
+        .modules {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .module {
+            background: var(--highlight);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--accent);
+            transition: var(--transition);
+        }
+        
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .module-title {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .module-toggle {
+            transition: var(--transition);
+        }
+        
+        .module.open .module-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .lessons {
+            display: grid;
+            gap: 0.5rem;
+            height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .module.open .lessons {
+            height: auto;
+            padding-top: 1rem;
+        }
+        
+        .lesson {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .lesson:hover {
+            background: var(--accent);
+        }
+        
+        .lesson-icon {
+            color: var(--html-color);
+        }
+        
+        .css-lesson .lesson-icon {
+            color: var(--css-color);
+        }
+        
+        .lesson-duration {
+            margin-left: auto;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Instructor Section */
+        .instructor {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: var(--highlight);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 5rem 0;
+            border: 1px solid var(--accent);
+        }
+        
+        .instructor-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+        
+        .instructor-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .instructor-title {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .instructor-bio {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            opacity: 0.7;
+            transform: translateY(-3px);
+        }
+        
+        /* Course Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: var(--highlight);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--accent);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--html-color);
+        }
+        
+        .css-feature .feature-icon {
+            color: var(--css-color);
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            margin: 5rem 0;
+        }
+        
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .testimonials-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial {
+            background: var(--highlight);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--accent);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .testimonial-text::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -1.5rem;
+            left: -1rem;
+            opacity: 0.2;
+            line-height: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* CTA Section */
+        .course-cta {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .course-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .course-hero {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-image {
+                height: 250px;
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+            
+            .course-title {
+                font-size: 2.5rem;
+            }
+            
+            .instructor {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .instructor-avatar {
+                margin: 0 auto;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .enroll-btn, .preview-btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-elements">
+        <div class="bg-element" style="width: 300px; height: 300px; top: 10%; left: 5%;"></div>
+        <div class="bg-element" style="width: 150px; height: 150px; top: 70%; left: 80%;"></div>
+        <div class="bg-element" style="width: 200px; height: 200px; top: 30%; left: 60%;"></div>
+        <div class="bg-element" style="width: 250px; height: 250px; top: 60%; left: 20%;"></div>
+    </div>
+    
+    <!-- Matrix rain effect -->
+    <canvas id="matrix" class="matrix-rain"></canvas>
+    
+    <div class="container">
+        <!-- Navigation Header -->
+        <nav>
+            <div class="logo"><a href="index.html">Code Craft</a></div>
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="courses.html"><i class="fa-solid fa-graduation-cap"></i></a></li>
+                <li><a href="contact.html"><i class="fa-sharp fa-solid fa-comment"></i></a></li>
+                <li><a href="sign-up.html"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <!-- Course Hero -->
+            <section class="course-hero">
+                <div class="course-info">
+                    <div>
+                        <span class="course-badge html-badge">HTML5</span>
+                        <span class="course-badge css-badge">CSS3</span>
+                    </div>
+                    <h1 class="course-title">HTML & CSS Fundamentals</h1>
+                    <p class="course-description">Learn to build beautiful, responsive websites with modern HTML5 and CSS3 techniques. Perfect for complete beginners wanting to create their first web projects.</p>
+                    
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>15 Hours</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-solid fa-laptop-code"></i>
+                            <span>3 Projects</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fa-solid fa-certificate"></i>
+                            <span>Certificate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <a href="sign-up.html" class="enroll-btn">Enroll Now</a>
+                        <a href="#preview" class="preview-btn">Preview Course</a>
+                    </div>
+                </div>
+                
+                <div class="course-image">
+                    <div class="course-icon">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Course Content -->
+            <section class="course-content">
+                <div class="content-header">
+                    <h2>What You'll Learn</h2>
+                    <p>This comprehensive course takes you from zero to proficient in HTML and CSS through hands-on projects and real-world examples.</p>
+                </div>
+                
+                <div class="modules">
+                    <!-- Module 1 -->
+                    <div class="module">
+                        <div class="module-header">
+                            <h3 class="module-title">
+                                <i class="fa-solid fa-folder-open"></i>
+                                Module 1: HTML Foundations
+                            </h3>
+                            <i class="fa-solid fa-chevron-down module-toggle"></i>
+                        </div>
+                        <div class="lessons">
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=UB1O30fR-EE', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Introduction to HTML</span>
+                                <span class="lesson-duration">32 min</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=UB1O30fR-EE', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Document Structure</span>
+                                <span class="lesson-duration">45 min</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=yfoY53QXEnI', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Text & Headings</span>
+                                <span class="lesson-duration">28 min</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=4Gq3WW6FwVA', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Links & Images</span>
+                                <span class="lesson-duration">38 min</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=3JluqTojuME', '_blank')">
+                                <i class="fa-solid fa-laptop-code lesson-icon"></i>
+                                <span>Project: Personal Profile Page</span>
+                                <span class="lesson-duration">1.5 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 2 -->
+                    <div class="module">
+                        <div class="module-header">
+                            <h3 class="module-title">
+                                <i class="fa-solid fa-folder-open"></i>
+                                Module 2: CSS Styling
+                            </h3>
+                            <i class="fa-solid fa-chevron-down module-toggle"></i>
+                        </div>
+                        <div class="lessons">
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=yfoY53QXEnI', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>CSS Introduction</span>
+                                <span class="lesson-duration">40 min</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=1Rs2ND1ryYc', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Selectors & Properties</span>
+                                <span class="lesson-duration">52 min</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=PH-2FfFD2PU', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Colors & Typography</span>
+                                <span class="lesson-duration">45 min</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=xV7S8BhIeBo', '_blank')">
+                                <i class="fa-solid fa-laptop-code lesson-icon"></i>
+                                <span>Project: Styled Portfolio</span>
+                                <span class="lesson-duration">2 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 3 -->
+                    <div class="module">
+                        <div class="module-header">
+                            <h3 class="module-title">
+                                <i class="fa-solid fa-folder-open"></i>
+                                Module 3: Layout Techniques
+                            </h3>
+                            <i class="fa-solid fa-chevron-down module-toggle"></i>
+                        </div>
+                        <div class="lessons">
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=rIO5326FgPE', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>The Box Model</span>
+                                <span class="lesson-duration">55 min</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=JJSoEo8JSnc', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Flexbox Fundamentals</span>
+                                <span class="lesson-duration">1.2 hrs</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=9zBsdzdE4sM', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>CSS Grid Basics</span>
+                                <span class="lesson-duration">1.5 hrs</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=srvUrASNj0s', '_blank')">
+                                <i class="fa-solid fa-laptop-code lesson-icon"></i>
+                                <span>Project: Responsive Layout</span>
+                                <span class="lesson-duration">2.5 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 4 -->
+                    <div class="module">
+                        <div class="module-header">
+                            <h3 class="module-title">
+                                <i class="fa-solid fa-folder-open"></i>
+                                Module 4: Advanced Topics
+                            </h3>
+                            <i class="fa-solid fa-chevron-down module-toggle"></i>
+                        </div>
+                        <div class="lessons">
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=p0bGHP-PXD4', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Responsive Design</span>
+                                <span class="lesson-duration">1 hr</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=PH-2FfFD2PU', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>CSS Variables</span>
+                                <span class="lesson-duration">45 min</span>
+                            </div>
+                            <div class="lesson css-lesson" onclick="window.open('https://www.youtube.com/watch?v=nKggPSiXt_w', '_blank')">
+                                <i class="fa-solid fa-play-circle lesson-icon"></i>
+                                <span>Transforms & Animations</span>
+                                <span class="lesson-duration">1.2 hrs</span>
+                            </div>
+                            <div class="lesson" onclick="window.open('https://www.youtube.com/watch?v=X1ulCwyhCVM', '_blank')">
+                                <i class="fa-solid fa-laptop-code lesson-icon"></i>
+                                <span>Final Project: Complete Website</span>
+                                <span class="lesson-duration">3 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Course Features -->
+            <section>
+                <div class="content-header">
+                    <h2>Course Features</h2>
+                    <p>Everything you need to master HTML and CSS in one comprehensive course</p>
+                </div>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                        <h3 class="feature-title">15+ Hours of Video</h3>
+                        <p>High-quality video lectures that explain concepts clearly with visual examples.</p>
+                    </div>
+                    
+                    <div class="feature-card css-feature">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="feature-title">Hands-On Projects</h3>
+                        <p>Build 3 real-world projects to apply what you learn and build your portfolio.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-question-circle"></i>
+                        </div>
+                        <h3 class="feature-title">Q&A Support</h3>
+                        <p>Get your questions answered by instructors and the Code Craft community.</p>
+                    </div>
+                    
+                    <div class="feature-card css-feature">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+                        <h3 class="feature-title">Downloadable Resources</h3>
+                        <p>Cheat sheets, code samples, and exercises to reinforce your learning.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Mobile Access</h3>
+                        <p>Learn on the go with our mobile-friendly platform and downloadable videos.</p>
+                    </div>
+                    
+                    <div class="feature-card css-feature">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-certificate"></i>
+                        </div>
+                        <h3 class="feature-title">Certificate</h3>
+                        <p>Earn a certificate of completion to showcase your new skills.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CTA Section -->
+            <section class="course-cta">
+                <h2>Ready to Build Beautiful Websites?</h2>
+                <p>Join thousands of students who launched their web development journey with this course</p>
+                <div class="btn-group">
+                    <a href="sign-up.html" class="enroll-btn">Enroll Now</a>
+                    <a href="#preview" class="preview-btn">Preview Course</a>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        
+        const alphabet = katakana + latin + nums;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 30);
+        
+        // Responsive canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Module accordion functionality
+        const modules = document.querySelectorAll('.module');
+        modules.forEach(module => {
+            const header = module.querySelector('.module-header');
+            header.addEventListener('click', () => {
+                module.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

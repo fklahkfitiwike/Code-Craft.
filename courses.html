@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses | Code Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000;
+            --text: #fff;
+            --accent: rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s ease;
+            --highlight: rgba(255, 255, 255, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+            opacity: 0.5;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, 50px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        /* Navigation Header */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo a {
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            background: linear-gradient(90deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 3s infinite alternate;
+            letter-spacing: -1px;
+        }
+        
+        @keyframes shine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: var(--text);
+            font-size: 1.3rem;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+        
+        nav ul li a:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 3rem 0 4rem;
+            position: relative;
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+        
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--text);
+        }
+        
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--text);
+            color: var(--bg);
+        }
+        
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .course-card {
+            background: var(--highlight);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--accent);
+            position: relative;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        .course-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .course-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+        }
+        
+        .course-level {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+        }
+        
+        .course-category {
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .course-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .course-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--accent);
+        }
+        
+        .course-duration, .course-students {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .enroll-btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .enroll-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Featured Course */
+        .featured-course {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 4rem 0;
+            background: var(--highlight);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+        }
+        
+        .featured-course-image {
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .featured-course-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.8));
+        }
+        
+        .featured-course-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .featured-course-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+        
+        .featured-course-description {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid var(--accent);
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .featured-course {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-course-image {
+                height: 250px;
+            }
+            
+            .featured-course-image::after {
+                background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-elements">
+        <div class="bg-element" style="width: 300px; height: 300px; top: 10%; left: 5%;"></div>
+        <div class="bg-element" style="width: 150px; height: 150px; top: 70%; left: 80%;"></div>
+        <div class="bg-element" style="width: 200px; height: 200px; top: 30%; left: 60%;"></div>
+        <div class="bg-element" style="width: 250px; height: 250px; top: 60%; left: 20%;"></div>
+    </div>
+    
+    <!-- Matrix rain effect -->
+    <canvas id="matrix" class="matrix-rain"></canvas>
+    
+    <div class="container">
+        <!-- Navigation Header -->
+        <nav>
+            <div class="logo"><a href="index.html">Code Craft</a></div>
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="courses.html"><i class="fa-solid fa-graduation-cap"></i></a></li>
+                <li><a href="contact.html"><i class="fa-sharp fa-solid fa-comment"></i></a></li>
+                <li><a href="sign-up.html"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Our Courses</h1>
+                <p>Master programming with our comprehensive courses designed to take you from beginner to professional developer.</p>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active">All</button>
+                <button class="filter-tab">Beginner</button>
+                <button class="filter-tab">Intermediate</button>
+                <button class="filter-tab">Advanced</button>
+                <button class="filter-tab">Web Dev</button>
+                <button class="filter-tab">Mobile</button>
+                <button class="filter-tab">Data Science</button>
+            </div>
+            
+            <!-- Featured Course -->
+            <div class="featured-course">
+                <div class="featured-course-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+                <div class="featured-course-content">
+                    <span class="featured-badge">Featured</span>
+                    <h2 class="featured-course-title">Complete Web Development Bootcamp</h2>
+                    <p class="featured-course-description">Go from zero to job-ready as a full-stack web developer in this comprehensive bootcamp. Learn HTML, CSS, JavaScript, React, Node.js, and more while building real-world projects.</p>
+                    <div class="course-meta">
+                        <div>
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 60 hours</span>
+                            <span class="course-students"><i class="fa-regular fa-user"></i> 5,000+ students</span>
+                        </div>
+                        <a href="#" class="enroll-btn">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Courses Grid -->
+            <div class="courses-grid">
+                <!-- Course 1 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80');">
+                        <span class="course-level">Beginner</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">HTML & CSS</span>
+                        <h3 class="course-title">Modern HTML & CSS From Scratch</h3>
+                        <p class="course-description">Learn to build beautiful, responsive websites with modern HTML5 and CSS3 techniques.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 15 hours</span>
+                            <a href="web-development.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+                        <span class="course-level">Intermediate</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">JavaScript</span>
+                        <h3 class="course-title">JavaScript Mastery</h3>
+                        <p class="course-description">Master JavaScript fundamentals and advanced concepts including ES6+, async/await, and DOM manipulation.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 25 hours</span>
+                            <a href="javascript.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+                        <span class="course-level">Advanced</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">React</span>
+                        <h3 class="course-title">React Professional</h3>
+                        <p class="course-description">Build professional React applications with hooks, context API, and advanced state management.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 30 hours</span>
+                            <a href="react.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 4 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+                        <span class="course-level">Intermediate</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">Python</span>
+                        <h3 class="course-title">Python for Web & Data</h3>
+                        <p class="course-description">Learn Python programming for web development and data analysis with real-world projects.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 20 hours</span>
+                            <a href="python.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 5 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80');">
+                        <span class="course-level">Beginner</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">Mobile</span>
+                        <h3 class="course-title">Flutter App Development</h3>
+                        <p class="course-description">Build cross-platform mobile apps with Flutter and Dart from the ground up.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 18 hours</span>
+                            <a href="flutter.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 6 -->
+                <div class="course-card">
+                    <div class="course-image" style="background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80');">
+                        <span class="course-level">Advanced</span>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-category">Web Dev</span>
+                        <h3 class="course-title">Advanced CSS & Animations</h3>
+                        <p class="course-description">Master CSS Grid, Flexbox, transitions, animations, and creative layout techniques.</p>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="fa-regular fa-clock"></i> 12 hours</span>
+                            <a href="css.html" class="enroll-btn">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Courses Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Hours of Content</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Mentor Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        
+        const alphabet = katakana + latin + nums;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 30);
+        
+        // Responsive canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Filter tabs functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // Here you would add filtering logic
+            });
+        });
+    </script>
+</body>
+</html>
